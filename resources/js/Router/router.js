@@ -3,13 +3,20 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+import Home from '../components/Home.vue'
+import Login from '../components/login/Login.vue'
+import NotFound from '../components/NotFound.vue'
+
 const routes = [
-    // { path: '/login', component: Login }
+    { path: '*', component: NotFound },
+    { path: '/', component: Home },
+    { path: '/login', component: Login }
 ]
 
 
 const router = new VueRouter({
-    routes
+    routes,
+    mode: 'history'
 })
 
 
