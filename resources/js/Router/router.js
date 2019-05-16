@@ -8,6 +8,8 @@ import Login from '../components/login/Login.vue'
 import SignUp from '../components/login/signup.vue'
 import NotFound from '../components/NotFound.vue'
 import Forum from '../components/forum/Forum'
+import Read from '../components/forum/Read.vue'
+import Create from '../components/forum/Create.vue'
 import Logout from '../components/login/Logout.vue'
 
 const routes = [
@@ -22,6 +24,15 @@ const routes = [
         path: '/forum',
         name: 'forum',
         component: Forum
+    },
+    {
+        path: '/question/:slug',
+        name: 'read',
+        component: Read
+    },
+    {
+        path: '/ask',
+        component: Create
     },
     {
         path: '/logout',
