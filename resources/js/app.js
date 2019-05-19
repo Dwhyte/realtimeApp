@@ -12,10 +12,15 @@ import Vuetify from 'vuetify'
 import router from './Router/router'
 import VueSimplemde from 'vue-simplemde'
 import 'simplemde/dist/simplemde.min.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+    iconfont: 'md'
+})
 Vue.use(VueSimplemde)
+import md from 'marked'
+window.md = md
 
 import User from './Helpers/User'
 window.User = User

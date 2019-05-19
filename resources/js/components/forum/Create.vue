@@ -34,11 +34,12 @@ export default {
     axios
       .get("/api/category")
       .then(res => (this.categories = res.data.data))
-      .catch(error => (this.errors = error.response.data.error));
   },
   methods: {
     create() {
-      axios.post("/api/question", this.form).then(res => console.log(res.data));
+      axios.post("/api/question", this.form)
+        .then(res => this.$router.push(res.data.path))
+        .catch(error => this.errors = error.response.data.error)
     }
   }
 };

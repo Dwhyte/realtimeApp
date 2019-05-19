@@ -12,6 +12,16 @@ class Question extends Model
 
     // protected $guarded = []; // ignore the mass assignment
 
+
+    protected static function boot()
+    {
+        parent::boot(); // gets all the function related to parent boot class - from Model.php
+
+        static::creating(function($question){
+            $question->slug = str_slug($question->title);
+        });
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';
