@@ -9,13 +9,22 @@ import SignUp from '../components/login/signup.vue'
 import NotFound from '../components/NotFound.vue'
 import Forum from '../components/forum/Forum'
 import Read from '../components/forum/Read.vue'
+import CreateCategory from '../components/category/createCategory'
 import Create from '../components/forum/Create.vue'
 import Logout from '../components/login/Logout.vue'
 
-const routes = [
-    { path: '*', component: NotFound },
-    { path: '/', component: Home },
-    { path: '/login', component: Login },
+const routes = [{
+        path: '*',
+        component: NotFound
+    },
+    {
+        path: '/',
+        component: Home
+    },
+    {
+        path: '/login',
+        component: Login
+    },
     {
         path: '/signup',
         component: SignUp
@@ -33,6 +42,10 @@ const routes = [
     {
         path: '/ask',
         component: Create
+    },
+    {
+        path: '/category',
+        component: CreateCategory
     },
     {
         path: '/logout',
