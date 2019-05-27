@@ -7,7 +7,7 @@
           <span class="grey--text">{{ data.user }} said {{ data.created_at }}</span>
         </div>
         <v-spacer></v-spacer>
-        <v-btn color="teal">8 replies</v-btn>
+        <v-btn color="teal" dark>{{ data.reply_count }} replies</v-btn>
       </v-card-title>
       <v-card-text v-html="body"></v-card-text>
       <v-card-actions v-if="own">
@@ -26,24 +26,25 @@
 export default {
   name: "showQuestion",
   props: ["data"],
-  data () {
+  data() {
     return {
-      own : User.own(this.data.user_id)  
-    }
+      own: User.own(this.data.user_id)
+    };
   },
   computed: {
-    body(){
-      return md.parse(this.data.body)
-    },
+    body() {
+      return md.parse(this.data.body);
+    }
   },
   methods: {
-    destory(){
-      axios.delete(`/api/question/${this.data.slug}`)
-        .then(res => this.$router.push('/forum'))
-        .catch(error => console.log(error.response.data))
+    destory() {
+      axios
+        .delete(`/api/question/${this.data.slug}`)
+        .then(res => this.$router.push("/forum"))
+        .catch(error => console.log(error.response.data));
     },
-    edit(){
-      EventBus.$emit('startEditing')
+    edit() {
+      EventBus.$emit("startEditing");
     }
   }
 };

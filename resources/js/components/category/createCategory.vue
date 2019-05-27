@@ -2,17 +2,18 @@
   <v-container>
     <v-form @submit.prevent="submit">
       <v-text-field v-model="form.name" type="text" label="Category Name"></v-text-field>
-      <v-btn color="teal" type="submit">Create</v-btn>
+      <v-btn color="pink" type="submit" v-if="editSlug">Update</v-btn>
+      <v-btn color="teal" type="submit" v-else>Create</v-btn>
     </v-form>
     <v-card>
       <v-toolbar color="indigo" dark dense>
         <v-toolbar-title>Categories</v-toolbar-title>
       </v-toolbar>
       <v-list>
-        <div v-for="category in categories" :key="category.id">
+        <div v-for="(category, index) in categories" :key="category.id">
           <v-list-tile>
             <v-list-tile-action>
-              <v-btn icon small>
+              <v-btn icon small @click="edit(index)">
                 <v-icon color="orange">edit</v-icon>
               </v-btn>
             </v-list-tile-action>
@@ -20,7 +21,7 @@
               <v-list-tile-title>{{ category.name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn icon small>
+              <v-btn icon small @click="destory(category.slug, index)">
                 <v-icon color="red">delete</v-icon>
               </v-btn>
             </v-list-tile-action>
@@ -39,10 +40,14 @@ export default {
       form: {
         name: null
       },
-      categories: {}
+      categories: {},
+      editSlug: null
     };
   },
   created() {
+    if (!User.admin()) {
+      this.$router.push("/forum");
+    }
     axios
       .get("/api/category")
       .then(res => (this.categories = res.data.data))
@@ -50,10 +55,35 @@ export default {
   },
   methods: {
     submit() {
+      this.editSlug ? this.update() : this.create();
+    },
+    update() {
+      axios
+        .patch(`/api/category/${this.editSlug}`, this.form)
+        .then(res => {
+          this.categories.unshift(res.data);
+          this.form.name = null;
+        })
+        .catch(error => console.log(error.response.data));
+    },
+    create() {
       axios
         .post("/api/category/", this.form)
-        .then(res => console.log(res.data))
+        .then(res => {
+          this.categories.unshift(res.data);
+          this.form.name = null;
+        })
         .catch(error => console.log(error.response.data));
+    },
+    destory(slug, index) {
+      axios
+        .delete(`/api/category/${slug}`)
+        .then(res => this.categories.splice(index, 1));
+    },
+    edit(index) {
+      this.form.name = this.categories[index].name;
+      this.editSlug = this.categories[index].slug;
+      this.categories.splice(index, 1);
     }
   }
 };
