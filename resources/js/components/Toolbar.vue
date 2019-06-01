@@ -6,7 +6,7 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <AppNotification></AppNotification>
+    <AppNotification v-if="loggedIn"></AppNotification>
 
     <div class="hidden-sm-and-down">
       <router-link v-for="item in items" :key="item.title" :to="item.to" v-if="item.show">
@@ -24,6 +24,7 @@ export default {
   },
   data() {
     return {
+      loggedIn: User.loggedIn(),
       items: [
         { title: "Forum", to: "/forum", show: true },
         { title: "Ask Question", to: "/ask", show: User.loggedIn() },

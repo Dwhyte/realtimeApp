@@ -1819,8 +1819,68 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "AppNotification"
+  name: "AppNotification",
+  data: function data() {
+    return {
+      read: {},
+      unread: {},
+      unreadCount: 0
+    };
+  },
+  created: function created() {
+    if (User.loggedIn()) {
+      this.getNotifications();
+    }
+  },
+  methods: {
+    getNotifications: function getNotifications() {
+      var _this = this;
+
+      axios.post("/api/notifications").then(function (res) {
+        _this.read = res.data.read;
+        _this.unread = res.data.unread;
+        _this.unreadCount = res.data.unread.length;
+      })["catch"](function (error) {
+        return Exception.handle(error);
+      });
+    },
+    readIt: function readIt(notification) {
+      var _this2 = this;
+
+      axios.post("/api/markAsRead", {
+        id: notification.id
+      }).then(function (res) {
+        _this2.unread.splice(notification, 1);
+
+        _this2.read.push(notification);
+
+        _this2.unreadCount--;
+      })["catch"](function (error) {
+        return Exception.handle(error);
+      });
+    }
+  },
+  computed: {
+    color: function color() {
+      return this.unreadCount > 0 ? "red" : "red lighten-4";
+    }
+  }
 });
 
 /***/ }),
@@ -1927,6 +1987,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      loggedIn: User.loggedIn(),
       items: [{
         title: "Forum",
         to: "/forum",
@@ -57521,11 +57582,70 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-btn",
-    { attrs: { icon: "" } },
+    "div",
+    { staticClass: "text-xs-center" },
     [
-      _c("v-icon", { attrs: { color: "red" } }, [_vm._v("add_alert")]),
-      _vm._v("5\n")
+      _c(
+        "v-menu",
+        { attrs: { "offset-y": "" } },
+        [
+          _c(
+            "v-btn",
+            { attrs: { slot: "activator", icon: "" }, slot: "activator" },
+            [
+              _c("v-icon", { attrs: { color: _vm.color } }, [
+                _vm._v("add_alert")
+              ]),
+              _vm._v("\n      " + _vm._s(_vm.unreadCount) + "\n    ")
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-list",
+            [
+              _vm._l(_vm.unread, function(item) {
+                return _c(
+                  "v-list-tile",
+                  { key: item.id },
+                  [
+                    _c(
+                      "router-link",
+                      { attrs: { to: item.path } },
+                      [
+                        _c(
+                          "v-list-tile-title",
+                          {
+                            on: {
+                              click: function($event) {
+                                return _vm.readIt(item)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(item.question))]
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _vm._l(_vm.read, function(item) {
+                return _c(
+                  "v-list-tile",
+                  { key: item.id },
+                  [_c("v-list-tile-title", [_vm._v(_vm._s(item.question))])],
+                  1
+                )
+              })
+            ],
+            2
+          )
+        ],
+        1
+      )
     ],
     1
   )
@@ -57660,7 +57780,7 @@ var render = function() {
       _vm._v(" "),
       _c("v-spacer"),
       _vm._v(" "),
-      _c("AppNotification"),
+      _vm.loggedIn ? _c("AppNotification") : _vm._e(),
       _vm._v(" "),
       _c(
         "div",
