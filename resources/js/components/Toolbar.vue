@@ -5,6 +5,9 @@
       <router-link to="/">LaraForum</router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
+
+    <AppNotification></AppNotification>
+
     <div class="hidden-sm-and-down">
       <router-link v-for="item in items" :key="item.title" :to="item.to" v-if="item.show">
         <v-btn flat>{{ item.title }}</v-btn>
@@ -14,7 +17,11 @@
 </template>
 
 <script>
+import AppNotification from "./AppNotification";
 export default {
+  components: {
+    AppNotification: AppNotification
+  },
   data() {
     return {
       items: [

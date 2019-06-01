@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Reply;
+use App\Notifications\NewReplyNotification;
 use Illuminate\Http\Request;
 use App\Model\Question;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,7 @@ class ReplyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Illuminate\Http\Response
      */
     public function index(Question $question)
     {
@@ -35,6 +36,8 @@ class ReplyController extends Controller
     public function store(Question $question, Request $request)
     {
         $reply = $question->replies()->create($request->all());
+        $user = $question->user;
+        $user->notify(new NewReplyNotification($reply));
         return response(['reply' => new ReplyResource($reply)], Response::HTTP_CREATED);
     }
 
@@ -42,7 +45,8 @@ class ReplyController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Model\Reply  $reply
-     * @return \Illuminate\Http\Response
+     *
+     * @return \App\Http\Resources\ReplyResource|\Illuminate\Http\Response
      */
     public function show(Question $question, Reply $reply)
     {
@@ -66,8 +70,10 @@ class ReplyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Reply  $reply
+     * @param \App\Model\Reply $reply
+     *
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Question $question, Reply $reply)
     {
