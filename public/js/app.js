@@ -2545,10 +2545,12 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    Echo.channel("likeChannel").listen("LikeEvent", function (e) {
+    window.Echo.channel("likeChannel").listen(".like-event", function (e) {
       if (_this.content.id == e.id) {
         e.type == 1 ? _this.count++ : _this.count--;
       }
+
+      console.log(e);
     });
   },
   methods: {
@@ -110273,10 +110275,6 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
-var _ref;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -110323,11 +110321,12 @@ if (token) {
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]((_ref = {
+window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "",
-  cluster: "mt1"
-}, _defineProperty(_ref, "cluster", 'mt1'), _defineProperty(_ref, "encrypted", true), _ref));
+  key: "12ab6ebc7ef13f50f5a8",
+  cluster: "mt1",
+  encrypted: false
+});
 
 /***/ }),
 

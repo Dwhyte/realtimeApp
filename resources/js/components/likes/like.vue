@@ -22,10 +22,11 @@ export default {
     }
   },
   created() {
-    Echo.channel("likeChannel").listen("LikeEvent", e => {
+    window.Echo.channel("likeChannel").listen(".like-event", e => {
       if (this.content.id == e.id) {
         e.type == 1 ? this.count++ : this.count--;
       }
+      console.log(e);
     });
   },
   methods: {

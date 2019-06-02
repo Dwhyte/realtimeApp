@@ -38,4 +38,9 @@ class LikeEvent implements ShouldBroadcast
     {
         return new Channel('likeChannel');
     }
+
+    public function broadcastAs()
+    {
+        return 'like-event';
+    }
 }
