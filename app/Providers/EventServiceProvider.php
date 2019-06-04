@@ -21,6 +21,10 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Event\LikeEvent' => [
             'App\Listeners\LikeEventListener'
+        ],
+
+        'App\Event\DeleteReplyEvent' => [
+            'App\Listeners\DeleteReplyEventListener'
         ]
     ];
 

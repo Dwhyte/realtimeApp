@@ -36,6 +36,18 @@ export default {
             this.content.splice(index, 1);
           });
       });
+
+      Echo.private("App.User." + User.id()).notification(notification => {
+        this.content.unshift(notification.reply);
+      });
+
+      Echo.channel("deleteReplyChannel").listen(".delete-reply-event", e => {
+        for (let index = 0; index < this.content.length; index++) {
+          if (this.content[index].id == e.id) {
+            this.content.splice(index, 1);
+          }
+        }
+      });
     }
   }
 };

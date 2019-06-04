@@ -1844,33 +1844,41 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    var _this = this;
+
     if (User.loggedIn()) {
       this.getNotifications();
     }
+
+    Echo["private"]("App.User." + User.id()).notification(function (notification) {
+      _this.unread.unshift(notification);
+
+      _this.unreadCount++;
+    });
   },
   methods: {
     getNotifications: function getNotifications() {
-      var _this = this;
+      var _this2 = this;
 
       axios.post("/api/notifications").then(function (res) {
-        _this.read = res.data.read;
-        _this.unread = res.data.unread;
-        _this.unreadCount = res.data.unread.length;
+        _this2.read = res.data.read;
+        _this2.unread = res.data.unread;
+        _this2.unreadCount = res.data.unread.length;
       })["catch"](function (error) {
         return Exception.handle(error);
       });
     },
     readIt: function readIt(notification) {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.post("/api/markAsRead", {
         id: notification.id
       }).then(function (res) {
-        _this2.unread.splice(notification, 1);
+        _this3.unread.splice(notification, 1);
 
-        _this2.read.push(notification);
+        _this3.read.push(notification);
 
-        _this2.unreadCount--;
+        _this3.unreadCount--;
       })["catch"](function (error) {
         return Exception.handle(error);
       });
@@ -2546,11 +2554,10 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     window.Echo.channel("likeChannel").listen(".like-event", function (e) {
-      if (_this.content.id == e.id) {
-        e.type == 1 ? _this.count++ : _this.count--;
-      }
+      if (_this.content.id === e.id) {
+        e.type === 1 ? _this.count++ : _this.count--;
+      } // console.log(e);
 
-      console.log(e);
     });
   },
   methods: {
@@ -2845,6 +2852,16 @@ __webpack_require__.r(__webpack_exports__);
         axios["delete"]("/api/question/".concat(_this.question.slug, "/reply/").concat(_this.content[index].id)).then(function (res) {
           _this.content.splice(index, 1);
         });
+      });
+      Echo["private"]("App.User." + User.id()).notification(function (notification) {
+        _this.content.unshift(notification.reply);
+      });
+      Echo.channel("deleteReplyChannel").listen(".delete-reply-event", function (e) {
+        for (var index = 0; index < _this.content.length; index++) {
+          if (_this.content[index].id == e.id) {
+            _this.content.splice(index, 1);
+          }
+        }
       });
     }
   }
@@ -110325,7 +110342,12 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "12ab6ebc7ef13f50f5a8",
   cluster: "mt1",
-  encrypted: false
+  encrypted: true,
+  auth: {
+    headers: {
+      Authorization: JWT_Token
+    }
+  }
 });
 
 /***/ }),
