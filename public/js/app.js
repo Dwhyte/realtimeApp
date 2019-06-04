@@ -110222,7 +110222,7 @@ function () {
   }, {
     key: "admin",
     value: function admin() {
-      return this.id() == 11;
+      return this.id() == 1;
     }
   }]);
 
@@ -110438,9 +110438,12 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "12ab6ebc7ef13f50f5a8",
-  cluster: "mt1",
-  encrypted: true,
+  key: 'myKey',
+  // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+  // encrypted: true,
+  wsHost: window.location.hostname,
+  wsPort: 6001,
+  disableStats: true,
   auth: {
     headers: {
       Authorization: JWT_Token
